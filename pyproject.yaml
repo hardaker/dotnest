@@ -8,7 +8,7 @@ dynamic = ["version"]
 description = "A library for accessing deep structures from simple
 text statements"
 readme = "README.md"
-license = ""
+license = "MIT"
 requires-python = ">=3.7"
 authors = [
     { name = "Wes Hardaker", email = "opensource@hardakers.net" },
