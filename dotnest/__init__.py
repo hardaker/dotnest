@@ -3,7 +3,7 @@
 from __future__ import annotations
 from typing import Any
 
-__VERSION__ = "0.9"
+__VERSION__ = "0.9.1"
 
 class DotNest:
     """A class implementing data access by dotted-strings."""
