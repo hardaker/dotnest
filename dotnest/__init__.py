@@ -1,11 +1,16 @@
-#!/usr/bin/python3
+"""A simplistic text string access specification for deep structures."""
+
+__VERSION__ = "0.9"
 
 class DotNest():
+    """A class implementing data access by dotted-strings."""
     def __init__(self, data):
+        """Initialize the class with an existing data structure."""
         self._data = data
 
     @property
     def data(self):
+        """The encapsulated data."""
         return self._data
 
     @data.setter
@@ -13,9 +18,15 @@ class DotNest():
         self._data = newdata
 
     def get(self, keys):
-        """given a list of keys, return the value at spot
+        """given a list of keys, return the value at spot.
 
-           keys must be a list/tuple of dict keys or ints for list elements"""
+           keys must be either a dotted string ("element.other.3.foo")
+           or a list of keys already parsed (["element", "other", "3",
+           "foo"]).
+
+           keys will be used as either keys to access a dict or an
+           integer for accessing list elements.
+        """
         keys = self.parse_keys(keys)
         ptr = self.data
 
@@ -32,12 +43,15 @@ class DotNest():
         return ptr
 
     def set(self, keys, value):
-        "given a list of keys, set the value at that spot to a new value"
+        "Given a key set (see get()), set the value at this spot to value."
         keys = self.parse_keys(keys)
         ptr = self.get(keys[0:-1])
         ptr[keys[-1]] = value
 
     def parse_keys(self, values):
+        """Separate a list of keys by a '.' specifier.  AKA, split.
+
+        If values is already a list, this will simply return it as is."""
         if isinstance(values, list):
             return values
         # TODO: allow / pathing if values starts with a /?
@@ -45,15 +59,18 @@ class DotNest():
         return values.split(".")
 
     def __eq__(self, other):
+        """Report whether this instance's data is equal to anothers."""
         return self.deep_compare(self.data, other.data)
 
     # from https://stackoverflow.com/questions/25044073/comparing-python-objects-from-deepcopy
     def deep_compare(self, left, right, excluded_keys = []):
+        """Deeply compare two structures."""
+        # TODO(hardaker): why can't we use an existing compare?  I don't remember.
         # convert left and right to dicts if possible, skip if they can't be converted
         try: 
             left = left.__dict__
             right = right.__dict__
-        except:
+        except Exception:
             pass
 
         # both sides must be of the same type 
@@ -61,7 +78,7 @@ class DotNest():
             return False
 
         # compare the two objects or dicts key by key
-        if type(left) == dict:
+        if isinstance(left, dict):
             for key in left:
                 # make sure that we did not exclude this key
                 if key not in excluded_keys:
@@ -81,7 +98,7 @@ class DotNest():
             return True
 
         # check for each item in lists
-        if type(left) == list:
+        if isinstance(left, list):
             # right and left must have the same length
             if len(left) != len(right):
                 return False
