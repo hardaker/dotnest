@@ -5,8 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "dotnest"
 dynamic = ["version"]
-description = "A library for accessing deep structures from simple
-text statements"
+description = "A library for accessing deep structures from simple text statements"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.7"
