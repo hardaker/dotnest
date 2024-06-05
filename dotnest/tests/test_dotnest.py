@@ -87,7 +87,7 @@ def test_dotnest_equals():
     assert dn1 != dn2
 
 
-def test_nb2an_dotnest_failed_ptr():
+def test_dotnest_failed_ptr():
     import dotnest
 
     dn1 = dotnest.DotNest(copy.deepcopy(data))
@@ -96,3 +96,26 @@ def test_nb2an_dotnest_failed_ptr():
     assert dn1.get("nonetest") == {"a": None}
     assert dn1.get("nonetest.a") == None
     assert dn1.get("nonetest.a.bogus.0.1.dne") == None
+
+def test_dotnest_alt_separator():
+    import dotnest
+
+    dn = dotnest.DotNest(copy.deepcopy(data))
+    
+    assert dn.get('subdict.arrrr.0') == "there"
+    assert dn.get('list.1.name') == "element2"
+
+    dn.separator = "_"
+
+    assert dn.parse_keys('subdict_arrrr_0') == ["subdict", "arrrr", "0"]
+
+    assert dn.get('subdict_arrrr_0') == "there"
+    assert dn.get('list_1_name') == "element2"
+
+    dn.separator = "___"
+
+    assert dn.get('subdict___arrrr___0') == "there"
+    assert dn.get('list___1___name') == "element2"
+    
+    dn.set('subdict___a.b_c', "ensure")
+    assert dn.get('subdict___a.b_c') == "ensure"

@@ -11,6 +11,7 @@ class DotNest:
     def __init__(self, data: dict | list):
         """Initialize the class with an existing data structure."""
         self._data = data
+        self._separator = "."
 
     @property
     def data(self) -> dict | list:
@@ -20,6 +21,15 @@ class DotNest:
     @data.setter
     def data(self, newdata: Any) -> None:
         self._data = newdata
+
+    @property
+    def separator(self) -> str:
+        """The separator to use between tokens."""
+        return self._separator
+
+    @separator.setter
+    def separator(self, newvalue) -> None:
+        self._separator = newvalue
 
     def get(self, keys: str | list) -> Any:
         """Return the value at a spot given a list of keys.
@@ -64,7 +74,7 @@ class DotNest:
             return values
         # TODO(hardaker): allow / pathing if values starts with a /?
         # TODO(hardaker): deal with escapes
-        return values.split(".")
+        return values.split(self._separator)
 
     def __eq__(self, other: DotNest) -> bool:
         """Report whether this instance's data is equal to anothers."""
