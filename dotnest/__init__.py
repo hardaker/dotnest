@@ -42,6 +42,9 @@ class DotNest:
                     raise ValueError(f"list key #{n} int({k}) too large")
             if isinstance(ptr, dict) and k not in ptr:
                 raise ValueError(f"key #{n} '{k}' not found in data")
+            if ptr is None:
+                return None
+
             ptr = ptr[k]
 
         return ptr

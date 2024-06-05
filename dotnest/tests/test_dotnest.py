@@ -2,12 +2,17 @@
 import copy
 
 data = {
-    'subdict': {
-        'arrrr': ["there", "she", "blows",]
+    "subdict": {
+        "arrrr": [
+            "there",
+            "she",
+            "blows",
+        ]
     },
-    'list': [
-        {'name': 'element1'}, {'name': 'element2'}
-    ]
+    "list": [{"name": "element1"}, {"name": "element2"}],
+    "nonetest": {
+        "a": None,
+    },
 }
 
 
@@ -78,5 +83,16 @@ def test_dotnest_equals():
 
     assert dn1 == dn2
 
-    dn1.set('list.1.name', 'bogus')
+    dn1.set("list.1.name", "bogus")
     assert dn1 != dn2
+
+
+def test_nb2an_dotnest_failed_ptr():
+    import dotnest
+
+    dn1 = dotnest.DotNest(copy.deepcopy(data))
+
+    # attempt to retrieve something that doesn't exist
+    assert dn1.get("nonetest") == {"a": None}
+    assert dn1.get("nonetest.a") == None
+    assert dn1.get("nonetest.a.bogus.0.1.dne") == None
