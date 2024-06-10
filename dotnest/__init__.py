@@ -8,10 +8,11 @@ __VERSION__ = "0.9.1"
 class DotNest:
     """A class implementing data access by dotted-strings."""
 
-    def __init__(self, data: dict | list):
+    def __init__(self, data: dict | list, allow_creation: bool = False):
         """Initialize the class with an existing data structure."""
         self._data = data
         self._separator = "."
+        self._allow_creation = allow_creation
 
     @property
     def data(self) -> dict | list:
@@ -31,7 +32,7 @@ class DotNest:
     def separator(self, newvalue) -> None:
         self._separator = newvalue
 
-    def get(self, keys: str | list) -> Any:
+    def get(self, keys: str | list, create_dicts: bool = False) -> Any:
         """Return the value at a spot given a list of keys.
 
         keys must be either a dotted string ("element.other.3.foo")
@@ -51,7 +52,10 @@ class DotNest:
                 if len(ptr) <= k:
                     raise ValueError(f"list key #{n} int({k}) too large")
             if isinstance(ptr, dict) and k not in ptr:
-                raise ValueError(f"key #{n} '{k}' not found in data")
+                if create_dicts:
+                    ptr[k] = {}
+                else:
+                    raise ValueError(f"key #{n} '{k}' not found in data")
             if ptr is None:
                 return None
 
@@ -62,7 +66,7 @@ class DotNest:
     def set(self, keys: str | list, value: Any) -> None:
         """Given a key set (see get()), set the value at this spot to value."""
         keys = self.parse_keys(keys)
-        ptr = self.get(keys[0:-1])
+        ptr = self.get(keys[0:-1], create_dicts=self._allow_creation)
         ptr[keys[-1]] = value
 
     def parse_keys(self, values: str | list) -> list:

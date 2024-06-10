@@ -119,3 +119,24 @@ def test_dotnest_alt_separator():
     
     dn.set('subdict___a.b_c', "ensure")
     assert dn.get('subdict___a.b_c') == "ensure"
+
+def test_dotnet_allow_creation():
+    import dotnest
+
+    dn = dotnest.DotNest(copy.deepcopy(data))
+    try:
+        dn.get("a.b.c")
+        assert 1 == 0  # should never get here
+    except ValueError:
+        assert 1 == 1
+            
+    
+    dn = dotnest.DotNest(copy.deepcopy(data), allow_creation=True)
+    try:
+        dn.get("a.b.c")
+        assert 1 == 0  # should never get here
+    except ValueError:
+        assert 1 == 1
+
+    dn.set("a.b.c", 14)
+    assert dn.get("a.b.c") == 14
