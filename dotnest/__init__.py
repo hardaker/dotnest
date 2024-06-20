@@ -32,7 +32,7 @@ class DotNest:
     def separator(self, newvalue) -> None:
         self._separator = newvalue
 
-    def get(self, keys: str | list, create_dicts: bool = False) -> Any:
+    def get(self, keys: str | list, create_dicts: bool = False, return_none: bool = False) -> Any:
         """Return the value at a spot given a list of keys.
 
         keys must be either a dotted string ("element.other.3.foo")
@@ -50,11 +50,15 @@ class DotNest:
                 if isinstance(k, str):
                     k = int(k)
                 if len(ptr) <= k:
+                    if return_none:
+                        return None
                     raise ValueError(f"list key #{n} int({k}) too large")
             if isinstance(ptr, dict) and k not in ptr:
                 if create_dicts:
                     ptr[k] = {}
                 else:
+                    if return_none:
+                        return None
                     raise ValueError(f"key #{n} '{k}' not found in data")
             if ptr is None:
                 return None

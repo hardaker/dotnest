@@ -140,3 +140,16 @@ def test_dotnet_allow_creation():
 
     dn.set("a.b.c", 14)
     assert dn.get("a.b.c") == 14
+
+def test_dotnest_get_return_none():
+    import dotnest
+    
+    dn = dotnest.DotNest(copy.deepcopy(data))
+    try:
+        dn.get("a.b.c")
+        assert 1 == 0  # should never get here
+    except ValueError:
+        assert 1 == 1
+
+    # this will no longer fail
+    assert dn.get("a.b.c", return_none=True) is None
