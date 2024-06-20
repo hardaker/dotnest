@@ -34,6 +34,11 @@ print(dn.get("list.1.name"))           # element1
 dn.set("subdict.newentry", "bar")
 print(dn.get("subdict.newentry"))      # bar
 print(dn.get("list.0"))                # {'name': 'element1'}
+
+dn.get("does.not.exist")               # raises ValueError
+dn.get("does.not.exist", 
+       return_none=True)               # None
+
 ```
 
 # Used by
